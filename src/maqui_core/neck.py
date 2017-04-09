@@ -36,16 +36,16 @@ class NeckSkill(object):
     YAW_HOME_POSITION = 0.0
     """float: Roll angle home postion"""
 
-    YAW_MIN_POSITION = -1.8
+    YAW_MIN_POSITION = -2.0
     """float: Roll angle min position"""
 
-    YAW_MAX_POSITION = 1.8
+    YAW_MAX_POSITION = 2.0
     """float: Roll angle max position"""
 
     PITCH_HOME_POSITION = 0.0
     """float: Pitch angle home postion"""
 
-    PITCH_MIN_POSITION = -0.3
+    PITCH_MIN_POSITION = -0.7
     """float: Pitch angle min position"""
 
     PITCH_MAX_POSITION = 0.6
