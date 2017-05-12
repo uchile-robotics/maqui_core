@@ -148,6 +148,8 @@ class TTSSkill(object):
         """
 
         return self._sra_client.get_result()
+    def wait_until_done(timeout=1.0):
+        pass
  
 if __name__ == "__main__":
     rospy.init_node("test_tts")
