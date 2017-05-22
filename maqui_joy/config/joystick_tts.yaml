@@ -1,0 +1,25 @@
+# see available mappings on src/bender_joy/xbox.py
+
+# pause button
+b_pause: 'START'
+
+# increment buttons
+b_increment: 'UP'
+b_decrement: 'DOWN'
+
+# say phrase button
+b_phrase_1: 'LEFT'
+b_phrase_2: 'RIGHT'
+
+# text: array of strings
+tts_phrases: [
+    "hello everyone",
+    "i am maqui",
+    "i am a service robot",
+    "i am a pepper and my team is called uchili peppers",
+    "ha ha ha ha",
+    "I love  Red Hot Chili peppers songs",
+    "in robocup i will meet my pepper friends",
+    "follow me on twitter"
+ 
+]
