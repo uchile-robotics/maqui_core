@@ -17,7 +17,7 @@
     <!-- PACKAGE INFORMATION -->
     <!-- - - - - - - - - - - -->
 
-    <name>bender_joy</name>
+    <name>maqui_joy</name>
     <version>2.0.0</version>
     
     <description>Contains code for teleoperation of Bender using joysticks</description>
@@ -44,15 +44,14 @@
 
 
     <!-- build, export, and execution dependencies -->
-    <depend>bender_msgs</depend>
-    <depend>bender_srvs</depend>
+    <depend>uchile_msgs</depend>
+    <depend>uchile_srvs</depend>
     <depend>joy</depend>
     <depend>roscpp</depend>
     <depend>sensor_msgs</depend>
     <depend>geometry_msgs</depend>
     <depend>std_msgs</depend>
-    <depend>maqui_core</depend>
-
+    
 
     <!-- build dependencies -->
 

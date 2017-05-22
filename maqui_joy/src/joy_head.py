@@ -7,8 +7,8 @@ import rospy
 import sys
 import math
 from sensor_msgs.msg import Joy
-from bender_msgs.msg import Emotion
-from bender_joy import xbox
+from uchile_msgs.msg import Emotion
+from maqui_joy import xbox
 
 class JoystickHead(object):
   

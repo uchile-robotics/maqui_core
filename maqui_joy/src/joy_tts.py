@@ -7,16 +7,15 @@ import rospy
 import sys
 import math
 from sensor_msgs.msg import Joy
-from bender_joy import xbox
+from maqui_joy import xbox
 from maqui_core.tts import TTSSkill
 
 import rospy
 import actionlib
-# ROS Messages
-#from bender_speech.msg import DoRecognitionAction, DoRecognitionGoal
-# Robot skill
+
 from std_msgs.msg import( String )
 from std_srvs.srv import( Empty, EmptyResponse )
+
 from naoqi_bridge_msgs.msg import(
     SpeechWithFeedbackGoal,
     SpeechWithFeedbackResult,
@@ -85,7 +84,7 @@ class JoystickTTS(object):
     def plugin(self):
         pass
         #     void  Joystick::synthesize(std::string text){
-        #     bender_srvs::String speech_text;
+        #     uchile_srvs::String speech_text;
         #     std::string talk = text;
         #     std::string text_evaluate = text;
         #

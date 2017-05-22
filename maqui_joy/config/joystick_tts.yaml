@@ -1,4 +1,4 @@
-# see available mappings on src/bender_joy/xbox.py
+# see available mappings on src/maqui_joy/xbox.py
 
 # pause button
 b_pause: 'START'

@@ -10,7 +10,7 @@
 # Note: Any message in which the "proxy_button" is pressed, will not be
 # forwarded!.
 #
-# see available mappings on src/bender_joy/xbox.py
+# see available mappings on src/maqui_joy/xbox.py
 
 
 ## button to enable proxy methods

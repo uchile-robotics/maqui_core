@@ -1,15 +1,15 @@
 <launch>
 
     <!-- parameters -->
-    <arg name="ns" default="/bender/joy"/>
+    <arg name="ns" default="/maqui/joy"/>
 
     <!-- drivers -->
-    <include file="$(find bender_joy)/launch/common/driver.xml">
+    <include file="$(find maqui_joy)/launch/common/driver.xml">
         <arg name="ns" value="$(arg ns)"/>
     </include>
 
     <!-- joy interfaces -->
-    <include file="$(find bender_joy)/launch/common/joy_interface.xml">
+    <include file="$(find maqui_joy)/launch/common/joy_interface.xml">
         <arg name="ns" value="$(arg ns)"/>
     </include>
     

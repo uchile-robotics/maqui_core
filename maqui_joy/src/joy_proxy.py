@@ -6,7 +6,7 @@ __email__ = 'matias.pavez.b@gmail.com'
 import rospy
 import sys
 from sensor_msgs.msg import Joy
-from bender_joy import xbox
+from maqui_joy import xbox
 
 
 class JoystickProxy(object):

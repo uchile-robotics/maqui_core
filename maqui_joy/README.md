@@ -1,4 +1,4 @@
-# bender_joy
+# maqui_joy
 
 ## Arquitectura del sistema de teleoperación
 
@@ -8,22 +8,22 @@ Para evitar problemas al intentar leer un dispositivo `js` inactivo, es que se p
 
 ``` 
 Adaptador Wireless Xbox 360
---> /dev/input/js0 --> node:driver0 --> topic:joy0 --> node:bender_joy/proxy0
---> /dev/input/js1 --> node:driver1 --> topic:joy1 --> node:bender_joy/proxy1
---> /dev/input/js2 --> node:driver2 --> topic:joy2 --> node:bender_joy/proxy2
---> /dev/input/js3 --> node:driver3 --> topic:joy3 --> node:bender_joy/proxy3
+--> /dev/input/js0 --> node:driver0 --> topic:joy0 --> node:maqui_joy/proxy0
+--> /dev/input/js1 --> node:driver1 --> topic:joy1 --> node:maqui_joy/proxy1
+--> /dev/input/js2 --> node:driver2 --> topic:joy2 --> node:maqui_joy/proxy2
+--> /dev/input/js3 --> node:driver3 --> topic:joy3 --> node:maqui_joy/proxy3
 ``` 
 
 - Cada dispositivo es asociado a un driver (joy/joy_node), el que publicará en el respectivo tópico `joy{0..3}`, siempre que haya un control activo.
-- A cada driver se le asocia un nodo (bender_joy/joy_proxy.py), que intercepta la señal y funciona a modo de manager, para routear los mensajes al tópico que se desee.
+- A cada driver se le asocia un nodo (maqui_joy/joy_proxy.py), que intercepta la señal y funciona a modo de manager, para routear los mensajes al tópico que se desee.
 
 Actualmente se tienen los siguientes remaps desde el proxy:
 ``` 
 node:proxy{0..3}:
---> topic: topic_A --> remap:topic: joy/base  --> node:bender_joy/joy_base
---> topic: topic_B --> remap:topic: joy/head  --> node:bender_joy/joy_head
---> topic: topic_X --> remap:topic: joy/tts   --> node:bender_joy/joy_tts
---> topic: topic_Y --> remap:topic: joy/arms  --> node:bender_joy/joy_arms
+--> topic: topic_A --> remap:topic: joy/base  --> node:maqui_joy/joy_base
+--> topic: topic_B --> remap:topic: joy/head  --> node:maqui_joy/joy_head
+--> topic: topic_X --> remap:topic: joy/tts   --> node:maqui_joy/joy_tts
+--> topic: topic_Y --> remap:topic: joy/arms  --> node:maqui_joy/joy_arms
 ``` 
 
 Luego, cada uno de los nodos finales, procesa un mensaje de tipo `sensor_msgs/Joy`, proveniente de hasta 4 drivers a la vez.

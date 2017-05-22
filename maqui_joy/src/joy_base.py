@@ -7,7 +7,7 @@ import rospy
 from std_srvs.srv import Empty
 from sensor_msgs.msg import Joy
 from geometry_msgs.msg import Twist
-from bender_joy import xbox
+from maqui_joy import xbox
 
 class JoystickBase(object):
   

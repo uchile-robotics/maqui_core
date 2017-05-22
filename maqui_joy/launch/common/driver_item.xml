@@ -5,14 +5,14 @@
 
 	<!-- joy node -->
 	<node respawn="true" pkg="joy" type="joy_node" name="driver$(arg joy_number)" ns="$(arg ns)">
-		<rosparam file="$(find bender_joy)/config/driver.yaml" command="load"/>
+		<rosparam file="$(find maqui_joy)/config/driver.yaml" command="load"/>
 		<param name="dev" value="/dev/input/js$(arg joy_number)"/>
 		<remap from="joy" to="joy$(arg joy_number)"/> 
 	</node>
 
 	<!-- joy proxy -->
-	<node respawn="false" pkg="bender_joy" type="joy_proxy.py" name="proxy$(arg joy_number)" ns="$(arg ns)">
-		<rosparam file="$(find bender_joy)/config/proxy.yaml" command="load"/>
+	<node respawn="false" pkg="maqui_joy" type="joy_proxy.py" name="proxy$(arg joy_number)" ns="$(arg ns)">
+		<rosparam file="$(find maqui_joy)/config/proxy.yaml" command="load"/>
 		<remap from="joy" to="joy$(arg joy_number)"/>
 	</node>
 
