@@ -7,7 +7,7 @@ import rospy
 import tf
 from bender_core.robot import Robot
 # Robot hardware
-from maqui_core.arm import LeftArm, RightArm
+from maqui_skills.arm import LeftArm, RightArm
 
 """
 Example of use of basic arm interfaces

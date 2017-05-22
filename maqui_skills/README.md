@@ -1,2 +1,2 @@
-# maqui_core
+# maqui_skills
 Python robot interface for Maqui Robot

@@ -47,36 +47,43 @@ class TTSSkill(object):
       
   
         # Speech recognition action topic
-        self._sra_topic = "speech_action"
+        self._sra_topic = "/speech_action"
         # ROS clients (avoid linter warnings)
         self._sra_client = None
 
     def check(self, timeout=1.0):
-        # Check client for speech recognition action (SRA)
-        sra_client = actionlib.SimpleActionClient(self._sra_topic, SpeechWithFeedbackAction)
-        # Wait for the sra server to start or exit
-        if not sra_client.wait_for_server(timeout=rospy.Duration(timeout)):
+        try:
+            # Check client for speech recognition action (SRA)
+            sra_client = actionlib.SimpleActionClient(self._sra_topic, SpeechWithFeedbackAction)
+            # Wait for the sra server to start or exit
+            if not sra_client.wait_for_server(timeout=rospy.Duration(timeout)):
+                return False
+        except Exception as e:
             return False
         return True
 
     def setup(self):
-        # Speech recognition action (sra)
-        self._sra_client = actionlib.SimpleActionClient(self._sra_topic, SpeechWithFeedbackAction)
-        self._sra_client.wait_for_server()
-        rospy.sleep(0.1)
+        try:
+            # Speech recognition action (sra)
+            self._sra_client = actionlib.SimpleActionClient(self._sra_topic, SpeechWithFeedbackAction)
+            self._sra_client.wait_for_server()
+            rospy.sleep(0.1)
+        except Exception as e:
+            return False
         return True
 
     def shutdown(self):
-       # Cancel goals
-        self._sra_client.cancel_all_goals()
+        # Cancel goals
+        try:
+            self._sra_client.cancel_all_goals()
+        except Exception as e:
+            return False
         return True
 
     def start(self):
-  
         return True
 
     def pause(self):
-
         return True
 
     # Speech recognition related methods
@@ -148,6 +155,7 @@ class TTSSkill(object):
         """
 
         return self._sra_client.get_result()
+
     def wait_until_done(timeout=1.0):
         pass
  
@@ -155,4 +163,4 @@ if __name__ == "__main__":
     rospy.init_node("test_tts")
     tts = TTSSkill()
     tts.setup()
-    tts.say("ki pa")
+    tts.say("ki pasa")
