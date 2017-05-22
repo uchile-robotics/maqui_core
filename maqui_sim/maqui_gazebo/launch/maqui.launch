@@ -10,7 +10,7 @@
   <include file="$(find pepper_description)/launch/pepper_upload.launch" />  
   <!-- Launch gazebo with custom world file -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <arg name="world_name" value="$(find maqui_sim)/worlds/$(arg world_name).world"/>
+    <arg name="world_name" value="$(find maqui_gazebo)/worlds/$(arg world_name).world"/>
     <arg name="paused" value="false"/>
   </include>
 
@@ -23,10 +23,10 @@
     args="-param robot_description -urdf -x -0.0 -y 0.0 -z 0.825 -model maqui" />
 
   <!-- RQT Control perspective -->
-  <node if="$(arg rqt_gui)" name="rqt_command" pkg="rqt_gui" type="rqt_gui" args="--perspective-file $(find maqui_sim)/config/maqui_gazebo_dashboard.perspective"/>
+  <node if="$(arg rqt_gui)" name="rqt_command" pkg="rqt_gui" type="rqt_gui" args="--perspective-file $(find maqui_gazebo)/config/maqui_gazebo_dashboard.perspective"/>
 
   <!-- RViz -->
-  <node if="$(arg rviz)" name="rviz" pkg="rviz" type="rviz" respawn="false" output="screen" args="-d $(find maqui_sim)/config/maqui_gazebo.rviz"/>
+  <node if="$(arg rviz)" name="rviz" pkg="rviz" type="rviz" respawn="false" output="screen" args="-d $(find maqui_gazebo)/config/maqui_gazebo.rviz"/>
 
   <!-- TF -->
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" ns="pepper_dcm" />

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>maqui_sim</name>
+  <name>maqui_gazebo</name>
   <version>0.0.0</version>
   <description>Simulation for Maqui robot (Aldebaran Pepper)</description>
 

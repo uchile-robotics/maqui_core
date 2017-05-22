@@ -13,7 +13,7 @@ from maqui_skills.arm import LeftArm, RightArm
 Example of use of basic arm interfaces
 
 With gazebo simulation:
-$ roslaunch maqui_sim maqui.launch
+$ roslaunch maqui_gazebo maqui.launch
 """
 if __name__ == "__main__":
     rospy.init_node("arm_example")
