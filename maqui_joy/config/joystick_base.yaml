@@ -9,5 +9,5 @@ a_linear_x:  'LS_VERT'
 a_linear_y:  'LS_HORZ'
 
 # cmd velocities
-max_linear_vel: 1.0   # caution: do not use values higher than 0.7 
-max_angular_vel: 1.0  # caution: do not use values higher than 0.8
+max_linear_vel: 0.35  # caution: robot max vel is 0.35.
+max_angular_vel: 0.5  # caution: robot max vel is 1.0. However, the response is really weird for values higher than 0.6
