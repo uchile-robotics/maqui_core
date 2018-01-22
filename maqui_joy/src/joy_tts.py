@@ -8,7 +8,8 @@ import sys
 import math
 from sensor_msgs.msg import Joy
 from maqui_joy import xbox
-from maqui_core.tts import TTSSkill
+from maqui_skills import robot_factory
+from maqui_skills.core.tts import TTSSkill
 
 import rospy
 import actionlib
@@ -25,17 +26,12 @@ from naoqi_bridge_msgs.msg import(
 
 class JoystickTTS(object):
   
-    def __init__(self):
+    def __init__(self,robot):
         rospy.loginfo('Joystick TTS init ...')
-
-        # connections
-        self.tts_client = TTSSkill()
-
-        # set up tts
-        rospy.loginfo('Checking up TTS')
-        self.tts_client.check()
-        rospy.loginfo('Setting up TTS')
-        self.tts_client.setup()
+        
+        self.robot = robot
+        self.robot.tts.set_language("Spanish")
+        self.robot.tts.set_gestures_mode(1)
 
         # load tts configuration
         self.tts_phrases = rospy.get_param('~tts_phrases', [])
@@ -45,6 +41,8 @@ class JoystickTTS(object):
         b_decrement = rospy.get_param('~b_decrement', 'DOWN')
         b_phrase_1  = rospy.get_param('~b_phrase_1', 'LEFT')
         b_phrase_2  = rospy.get_param('~b_phrase_2', 'RIGHT')
+        b_start_head= rospy.get_param('~b_start_head', 'A')
+		b_stop_head = rospy.get_param('~b_stop_head', 'B')
 
         key_mapper = xbox.KeyMapper()
         self.b_idx_pause = key_mapper.get_button_id(self.b_pause)
@@ -52,6 +50,8 @@ class JoystickTTS(object):
         self.b_idx_decrement = key_mapper.get_button_id(b_decrement)
         self.b_idx_phrase_1  = key_mapper.get_button_id(b_phrase_1)
         self.b_idx_phrase_2  = key_mapper.get_button_id(b_phrase_2)
+        self.b_idx_start_head= key_mapper.get_button_id(b_start_head)
+        self.b_idx_stop_head = key_mapper.get_button_id(b_stop_head)
         
         # check
         self.assert_params()
@@ -75,6 +75,8 @@ class JoystickTTS(object):
         assert isinstance(self.b_idx_decrement, int)
         assert isinstance(self.b_idx_phrase_1, int)
         assert isinstance(self.b_idx_phrase_2, int)
+        assert isinstance(self.b_start_head, int)
+        assert isinstance(self.b_stop_head, int)
 
         # check config
         if not len(self.tts_phrases):
@@ -121,12 +123,21 @@ class JoystickTTS(object):
 
 
     def synthesize(self, text):
+    	
         try:
             rospy.loginfo("synthesizing text: %s" % text)
-            self.tts_client.say(text)
+            self.robot.tts.say_with_gestures(text)
+            rospy.sleep(0.5)
         except Exception, e:
             rospy.logwarn("TTS server failed!")
 
+    def start_head():
+    	self.robot.basic_awareness.look_araund()
+    	
+
+    def stop_head():
+    	self.robot.basic_awareness.stop()
+    	self.robot.neck.home()
 
     def callback(self, msg):
 
@@ -184,10 +195,20 @@ class JoystickTTS(object):
                     phrase_idx = (self.tts_level*2 + 1) % n_phrases
                     text = self.tts_phrases[phrase_idx]
                     self.synthesize(text)
+
+            # start head
+            elif msg.buttons[self.b_idx_start_head]:
+            	self.start_head()
+
+            # stop head
+            elif msg.buttons[self.b_idx_start_head]:
+            	self.stop_head()
             
             return
 
 if __name__ == '__main__':
     rospy.init_node('joy_tts')
-    JoystickTTS()
+    
+    robot = robot_factory.build(["tts","basic_awareness"], core=False)
+    JoystickTTS(robot)
     rospy.spin()
