@@ -40,4 +40,4 @@ channels:
         topic: 'arms'
 
 # default channel name
-default_channel: 'base'
+default_channel: 'tts'

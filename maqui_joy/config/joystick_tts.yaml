@@ -17,8 +17,7 @@ tts_phrases: [
     "Muchas gracias Ossccar",
     "muy buenos dias Presidenta",
     "Agradezco al Canciyer Heraldo Munioz por la invitacion a este lanzamiento. \\pau=500\\ Los invito a conocer los Anhelos al dos mil treinta.",
-    "Nos vemos el dos mil treinta!"
-    
+    "^start(animations/Stand/Gestures/Hey_2)  \\pau=500\\ Nos vemos el dos mil treinta! \\pau=500\\  ^wait(animations/Stand/Gestures/Hey_2)"
 ]
 
 # tts_phrases: [

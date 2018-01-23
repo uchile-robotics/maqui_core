@@ -42,7 +42,7 @@ class JoystickTTS(object):
         b_phrase_1  = rospy.get_param('~b_phrase_1', 'LEFT')
         b_phrase_2  = rospy.get_param('~b_phrase_2', 'RIGHT')
         b_start_head= rospy.get_param('~b_start_head', 'A')
-		b_stop_head = rospy.get_param('~b_stop_head', 'B')
+        b_stop_head = rospy.get_param('~b_stop_head', 'B')
 
         key_mapper = xbox.KeyMapper()
         self.b_idx_pause = key_mapper.get_button_id(self.b_pause)
@@ -75,8 +75,8 @@ class JoystickTTS(object):
         assert isinstance(self.b_idx_decrement, int)
         assert isinstance(self.b_idx_phrase_1, int)
         assert isinstance(self.b_idx_phrase_2, int)
-        assert isinstance(self.b_start_head, int)
-        assert isinstance(self.b_stop_head, int)
+        assert isinstance(self.b_idx_start_head, int)
+        assert isinstance(self.b_idx_stop_head, int)
 
         # check config
         if not len(self.tts_phrases):
@@ -123,7 +123,7 @@ class JoystickTTS(object):
 
 
     def synthesize(self, text):
-    	
+        
         try:
             rospy.loginfo("synthesizing text: %s" % text)
             self.robot.tts.say_with_gestures(text)
@@ -131,13 +131,13 @@ class JoystickTTS(object):
         except Exception, e:
             rospy.logwarn("TTS server failed!")
 
-    def start_head():
-    	self.robot.basic_awareness.look_araund()
-    	
+    def start_head(self):
+        self.robot.basic_awareness.look_around()
+        
 
-    def stop_head():
-    	self.robot.basic_awareness.stop()
-    	self.robot.neck.home()
+    def stop_head(self):
+        self.robot.basic_awareness.stop()
+        self.robot.basic_motion.set_posture()
 
     def callback(self, msg):
 
@@ -198,17 +198,17 @@ class JoystickTTS(object):
 
             # start head
             elif msg.buttons[self.b_idx_start_head]:
-            	self.start_head()
+                self.start_head()
 
             # stop head
-            elif msg.buttons[self.b_idx_start_head]:
-            	self.stop_head()
+            elif msg.buttons[self.b_idx_stop_head]:
+                self.stop_head()
             
             return
 
 if __name__ == '__main__':
     rospy.init_node('joy_tts')
     
-    robot = robot_factory.build(["tts","basic_awareness"], core=False)
+    robot = robot_factory.build(["tts","basic_awareness","basic_motion"], core=False)
     JoystickTTS(robot)
     rospy.spin()
