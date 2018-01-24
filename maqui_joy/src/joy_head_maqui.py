@@ -7,7 +7,8 @@ import rospy
 import sys
 import math
 from sensor_msgs.msg import Joy
-from uchile_msgs.msg import Emotion
+from naoqi_bridge_msgs.msg import JointAnglesWithSpeed
+from std_msgs.msg import Float32
 from maqui_joy import xbox
 
 class JoystickHead(object):
@@ -16,7 +17,7 @@ class JoystickHead(object):
         rospy.loginfo('Joystick head init ...')
 
         # connections
-        self.head_pub   = rospy.Publisher('head/cmd', Emotion, queue_size=1)
+        self.head_pub   = rospy.Publisher('/maqui/pose/joint_angles', JointAnglesWithSpeed, queue_size=1)
 
 
         # load head configuration
@@ -87,22 +88,19 @@ class JoystickHead(object):
         degrees = min(self.max_neck_degrees, degrees) 
 
         # send
-        msg = Emotion()
-        msg.Order = "MoveX"
-        msg.Action = ""
-        msg.X = degrees
-        self.head_pub.publish(msg)
+        msg = JointAnglesWithSpeed()
+        msg.joint_names = ["HeadYaw"]
+        msg.header.stamp = rospy.Time.now()
+        msg.joint_angles = [degrees]
+        msg.speed = 0.1
+        #self.head_pub.publish(msg)
 
         # todo: throttle 0.5s
         rospy.loginfo("Setting neck angle to %f [deg]" % degrees)
 
 
     def set_emotion(self, emotion_str):
-        msg = Emotion()
-        msg.Order = "changeFace"
-        msg.Action = emotion_str
-        msg.X = 0
-        self.head_pub.publish(msg)
+
         rospy.loginfo("Setting head emotion to %s" % emotion_str)
 
 
@@ -132,8 +130,11 @@ class JoystickHead(object):
 
                 if neck_side*neck_side + neck_front*neck_front > 0.5:
                     angle = math.atan2(neck_side, neck_front)
-                    degrees = math.degrees(angle)
-                    #self.move_head(degrees)
+                    if angle<0:
+                        angle = angle + 1
+                    else :
+                        angle = angle - 1
+                    self.move_head(angle)
 
                 return
 
