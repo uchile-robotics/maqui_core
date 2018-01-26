@@ -23,6 +23,9 @@ b_proxy: 'BACK'
 # button: button to use for remapping to this channel
 # topic: output topic for this channel 
 channels:
+    joy:
+        button: 'RB'
+        topic: 'demo'
     base:
         button: 'A'
         topic: 'base'
@@ -40,4 +43,4 @@ channels:
         topic: 'arms'
 
 # default channel name
-default_channel: 'tts'
+default_channel: 'joy'

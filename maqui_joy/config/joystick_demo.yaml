@@ -1,0 +1,37 @@
+# see available mappings on src/maqui_joy/xbox.py
+
+# pause button
+b_pause: 'START'
+
+
+b_head: 'A'
+
+b_tablet_image: 'B'
+b_tablet_reset: 'LB'
+b_record: 'X'
+b_photo: 'Y'
+
+# increment buttons
+b_increment: 'UP'
+b_decrement: 'DOWN'
+
+# say phrase button
+b_phrase_1: 'LEFT'
+b_phrase_2: 'RIGHT'
+
+# text: array of strings
+tts_phrases: [
+    "Muchas gracias Ossccar",
+    "muy buenos dias Presidenta",
+    "Agradezco al Canciyer Heraldo Munioz por la invitacion a este lanzamiento. \\pau=500\\ Los invito a conocer los Anhelos al dos mil treinta.",
+    "^start(animations/Stand/Gestures/Hey_2)  \\pau=500\\ Nos vemos el dos mil treinta! \\pau=500\\  ^wait(animations/Stand/Gestures/Hey_2)"
+]
+
+# tts_phrases: [
+#     "hello everyone",
+#     "i am maqui",
+#     "i am a service robot",
+#     "i am a pepper and my team is called uchili peppers",
+#     "ha ha ha ha",
+#     "I love  Red Hot Chili peppers songs"
+# ]

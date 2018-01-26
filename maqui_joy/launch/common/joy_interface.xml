@@ -17,6 +17,13 @@
         <remap from="tts/say" to="/maqui/hw/tts/say"/>
     </node>
 
+    <!-- joy -->
+
+    <node pkg="maqui_joy" type="joy_demo.py" name="joy" output="screen" ns="$(arg ns)">
+        <rosparam file="$(find maqui_joy)/config/joystick_demo.yaml" command="load"/>
+        <remap from="joy" to="demo"/>
+    </node>
+
     <!-- head -->
 <!-- 
     <node pkg="maqui_joy" type="joy_head.py" name="joy_head" output="screen" ns="$(arg ns)">
