@@ -14,7 +14,7 @@ class JoystickBase(object):
     def __init__(self):
         rospy.loginfo('Joystick base init ...')
 
-        self.pub = rospy.Publisher('base/cmd_vel', Twist, queue_size=1)
+        self.pub = rospy.Publisher('/cmd_vel', Twist, queue_size=1)
 
         # control
         self.is_paused = False
