@@ -8,13 +8,21 @@ b_neck_actuate: 'RS'
 a_neck_sides: 'RS_HORZ'
 a_neck_front: 'RS_VERT'
 
+#neck look
+# increment buttons
+b_up: 'UP'
+b_down: 'DOWN'
+
+# say phrase button
+b_left: 'LEFT'
+b_right: 'RIGHT'
+
 # emotion buttons
-b_increment: 'LB'
-b_decrement: 'RB'
-b_happy: 'A'
-b_angry: 'B'
-b_sad: 'X'
-b_surprise: 'Y'
+b_emotion_trigger: 'RB'
+b_home: 'A'
+b_action1: 'X'
+b_action2: 'Y'
+b_action3: 'B'
 
 max_neck_degrees: 60
 max_emotion_intensity: 3

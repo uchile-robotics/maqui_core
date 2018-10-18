@@ -3,13 +3,11 @@
 # pause button
 b_pause: 'START'
 
+b_tablet_reset: 'X'
 
-b_head: 'A'
-
-b_tablet_image: 'B'
-b_tablet_reset: 'LB'
-b_record: 'X'
 b_photo: 'Y'
+b_life: 'A'
+b_tablet_logo: 'B'
 
 # increment buttons
 b_increment: 'UP'
@@ -19,19 +17,24 @@ b_decrement: 'DOWN'
 b_phrase_1: 'LEFT'
 b_phrase_2: 'RIGHT'
 
+
+b_behavior: 'LB'
 # text: array of strings
 tts_phrases: [
-    "Muchas gracias Ossccar",
-    "muy buenos dias Presidenta",
-    "Agradezco al Canciyer Heraldo Munioz por la invitacion a este lanzamiento. \\pau=500\\ Los invito a conocer los Anhelos al dos mil treinta.",
-    "^start(animations/Stand/Gestures/Hey_2)  \\pau=500\\ Nos vemos el dos mil treinta! \\pau=500\\  ^wait(animations/Stand/Gestures/Hey_2)"
-]
+    " Hola !",
+    " Hola !",
+    " Me llamo Maqui",
+    " Me llamo Maqui y soy un robot Pepper",
+    " Trabajo en el laboratorio de robotica, \\pau=500\\ con mi amigo Bender y mi equipo Uchile Jom Breiquers",
+    " Soy un robot de servicio, disegnado para acompagnar y ayudar a los humanos",
+    "^start(animations/Stand/Emotions/Positive/Laugh_3) \\pau=1000\\ "
+    ]
 
-# tts_phrases: [
-#     "hello everyone",
-#     "i am maqui",
-#     "i am a service robot",
-#     "i am a pepper and my team is called uchili peppers",
-#     "ha ha ha ha",
-#     "I love  Red Hot Chili peppers songs"
-# ]
+b_animation: 'RB'
+
+animations: [
+    "Stand/Waiting/Robot_1",
+    "Stand/Waiting/SpaceShuttle_1",
+    "Stand/Waiting/Zombie_1",
+    'dance_saxo/guitar'
+    ]

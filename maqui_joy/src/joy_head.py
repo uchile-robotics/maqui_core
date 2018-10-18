@@ -7,18 +7,17 @@ import rospy
 import sys
 import math
 from sensor_msgs.msg import Joy
-from uchile_msgs.msg import Emotion
 from maqui_joy import xbox
+from maqui_skills import robot_factory
 
 class JoystickHead(object):
   
-    def __init__(self):
+    def __init__(self, robot):
         rospy.loginfo('Joystick head init ...')
 
         # connections
-        self.head_pub   = rospy.Publisher('head/cmd', Emotion, queue_size=1)
 
-
+        self.maqui = robot
         # load head configuration
         self.b_pause = rospy.get_param('~b_pause', 'START')
         
@@ -26,16 +25,16 @@ class JoystickHead(object):
         a_neck_sides   = rospy.get_param('~a_neck_sides', 'RS_HORZ')
         a_neck_front   = rospy.get_param('~a_neck_front', 'RS_VERT')
         
-        b_increment    = rospy.get_param('~b_increment', 'RB')
-        b_decrement    = rospy.get_param('~b_decrement', 'LB')
-        b_happy        = rospy.get_param('~b_happy', 'A')
-        b_angry        = rospy.get_param('~b_angry', 'B')
-        b_sad          = rospy.get_param('~b_sad', 'X')
-        b_surprise     = rospy.get_param('~b_surprise', 'Y')
+        b_up           = rospy.get_param('~b_up', 'UP')
+        b_down         = rospy.get_param('~b_down', 'DOWN')
+        b_left         = rospy.get_param('~b_left', 'LEFT')
+        b_right        = rospy.get_param('~b_right', 'RIGHT')
 
-        self.max_neck_degrees      = rospy.get_param('~max_neck_degrees', 60)
-        self.max_emotion_intensity = rospy.get_param('~max_emotion_intensity', 3)
-        self.min_emotion_intensity = rospy.get_param('~min_emotion_intensity', 1)
+        b_emotion      = rospy.get_param('~b_emotion_trigger', 'RB')
+        b_action1      = rospy.get_param('~b_action1', 'X')
+        b_action2      = rospy.get_param('~b_action2', 'Y')
+        b_action3      = rospy.get_param('~b_action3', 'B')
+        b_home         = rospy.get_param('~b_home', 'A')
 
         # convert to ids
         key_mapper = xbox.KeyMapper()
@@ -43,12 +42,18 @@ class JoystickHead(object):
         self.a_idx_neck_sides   = key_mapper.get_axis_id(a_neck_sides)
         self.a_idx_neck_front   = key_mapper.get_axis_id(a_neck_front)
         self.b_idx_neck_actuate = key_mapper.get_button_id(b_neck_actuate)
-        self.b_idx_increment    = key_mapper.get_button_id(b_increment)
-        self.b_idx_decrement    = key_mapper.get_button_id(b_decrement)
-        self.b_idx_happy        = key_mapper.get_button_id(b_happy)
-        self.b_idx_angry        = key_mapper.get_button_id(b_angry)
-        self.b_idx_sad          = key_mapper.get_button_id(b_sad)
-        self.b_idx_surprise     = key_mapper.get_button_id(b_surprise)
+
+        self.b_idx_neck_up = key_mapper.get_button_id(b_up)
+        self.b_idx_neck_down = key_mapper.get_button_id(b_down)
+        self.b_idx_neck_left = key_mapper.get_button_id(b_left)
+        self.b_idx_neck_right = key_mapper.get_button_id(b_right)
+
+
+        self.b_idx_emotion  = key_mapper.get_button_id(b_emotion)
+        self.b_idx_action1  = key_mapper.get_button_id(b_action1)
+        self.b_idx_action2  = key_mapper.get_button_id(b_action2)
+        self.b_idx_action3  = key_mapper.get_button_id(b_action3)
+        self.b_idx_home     = key_mapper.get_button_id(b_home)
 
         # check
         self.assert_params()
@@ -56,8 +61,11 @@ class JoystickHead(object):
 
         # control
         self.is_paused = False
-        self.emotion_intensity = self.min_emotion_intensity
 
+        #neck control
+        self.yaw_step = 0.25
+
+        self.pitch_step = 0.25
 
         # ready to work
         rospy.Subscriber('joy', Joy, self.callback, queue_size=1)
@@ -72,40 +80,18 @@ class JoystickHead(object):
         assert isinstance(self.a_idx_neck_sides, int)
         assert isinstance(self.a_idx_neck_front, int)
         assert isinstance(self.b_idx_neck_actuate, int)
-        assert isinstance(self.b_idx_increment, int)
-        assert isinstance(self.b_idx_decrement, int)
-        assert isinstance(self.b_idx_happy, int)
-        assert isinstance(self.b_idx_angry, int)
-        assert isinstance(self.b_idx_sad, int)
-        assert isinstance(self.b_idx_surprise, int)
 
 
-    def move_head(self, degrees):
-
-        # saturate
-        degrees = max(-self.max_neck_degrees, degrees)
-        degrees = min(self.max_neck_degrees, degrees) 
-
-        # send
-        msg = Emotion()
-        msg.Order = "MoveX"
-        msg.Action = ""
-        msg.X = degrees
-        self.head_pub.publish(msg)
-
-        # todo: throttle 0.5s
-        rospy.loginfo("Setting neck angle to %f [deg]" % degrees)
+    def move_head(self, yaw, pitch):
+        actual_yaw  = self.maqui.neck.get_yaw()
+        actual_pitch  = self.maqui.neck.get_pitch()
+        
+        self.maqui.neck.send_joint_goal(yaw=actual_yaw + yaw * self.yaw_step, pitch = actual_pitch + pitch * self.pitch_step, interval= 0.5, segments=10)
+        return 
 
 
     def set_emotion(self, emotion_str):
-        msg = Emotion()
-        msg.Order = "changeFace"
-        msg.Action = emotion_str
-        msg.X = 0
-        self.head_pub.publish(msg)
-        rospy.loginfo("Setting head emotion to %s" % emotion_str)
-
-
+        return 
     def callback(self, msg):
 
         # pause
@@ -124,45 +110,70 @@ class JoystickHead(object):
         
         # work
         if not self.is_paused:
-
             # neck
             if msg.buttons[self.b_idx_neck_actuate]:
+
                 neck_side  = msg.axes[self.a_idx_neck_sides]
                 neck_front = msg.axes[self.a_idx_neck_front]
 
-                if neck_side*neck_side + neck_front*neck_front > 0.5:
-                    angle = math.atan2(neck_side, neck_front)
-                    degrees = math.degrees(angle)
-                    self.move_head(degrees)
-
+                self.move_head(neck_side, neck_front)
                 return
 
-            # head emotion in/decrement
-            elif msg.buttons[self.b_idx_decrement]:
-                self.emotion_intensity = int(max(self.min_emotion_intensity, self.emotion_intensity - 1))
-                rospy.loginfo("Emotion intensity decrement: %d" % self.emotion_intensity)
-            elif msg.buttons[self.b_idx_increment]:
-                self.emotion_intensity = int(min(self.max_emotion_intensity, self.emotion_intensity + 1))
-                rospy.loginfo("Emotion intensity increment: %d" % self.emotion_intensity)
+
+            if msg.buttons[self.b_idx_neck_up] :
+                self.maqui.neck.move_up()
+
+            elif msg.buttons[self.b_idx_neck_down] :
+                self.maqui.neck.move_down()
+
+            elif msg.buttons[self.b_idx_neck_left] :
+                self.maqui.neck.move_left()
+
+            elif msg.buttons[self.b_idx_neck_right] :
+                self.maqui.neck.move_right()
+
+
+            if msg.buttons[self.b_idx_emotion]:
+                pass
+            else:
+
+                if msg.buttons[self.b_idx_home]:
+                    self.maqui.neck.home()
+                elif msg.buttons[self.b_idx_action1]:
+                    self.maqui.neck.nod()
+                elif msg.buttons[self.b_idx_action2]:
+                    self.maqui.neck.look_person()
+
+                elif msg.buttons[self.b_idx_action3]:
+                    self.maqui.neck.nope()
+
+            # # head emotion in/decrement
+            # elif msg.buttons[self.b_idx_decrement]:
+            #     self.emotion_intensity = int(max(self.min_emotion_intensity, self.emotion_intensity - 1))
+            #     rospy.loginfo("Emotion intensity decrement: %d" % self.emotion_intensity)
+            # elif msg.buttons[self.b_idx_increment]:
+            #     self.emotion_intensity = int(min(self.max_emotion_intensity, self.emotion_intensity + 1))
+            #     rospy.loginfo("Emotion intensity increment: %d" % self.emotion_intensity)
             
 
-            # head emotions: happy, angry, sad, surprise
-            elif msg.buttons[self.b_idx_happy]:
-                self.set_emotion("happy%d" % self.emotion_intensity)
+            # # head emotions: happy, angry, sad, surprise
+            # elif msg.buttons[self.b_idx_happy]:
+            #     self.set_emotion("happy%d" % self.emotion_intensity)
             
-            elif msg.buttons[self.b_idx_angry]:
-                self.set_emotion("angry%d" % self.emotion_intensity)
+            # elif msg.buttons[self.b_idx_angry]:
+            #     self.set_emotion("angry%d" % self.emotion_intensity)
             
-            elif msg.buttons[self.b_idx_sad]:
-                self.set_emotion("sad%d" % self.emotion_intensity)
+            # elif msg.buttons[self.b_idx_sad]:
+            #     self.set_emotion("sad%d" % self.emotion_intensity)
             
-            elif msg.buttons[self.b_idx_surprise]:
-                self.set_emotion("surprise")
+            # elif msg.buttons[self.b_idx_surprise]:
+            #     self.set_emotion("surprise")
 
             return
 
 
 if __name__ == '__main__':
     rospy.init_node('joy_head')
-    JoystickHead()
+    robot = robot_factory.build(["neck", "face"])
+    JoystickHead(robot)
     rospy.spin()
