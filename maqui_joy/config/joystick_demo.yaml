@@ -22,13 +22,14 @@ b_behavior: 'LB'
 # text: array of strings
 tts_phrases: [
     " Hola !",
-    " Hola !",
-    " Me llamo Maqui",
-    " Me llamo Maqui y soy un robot Pepper",
-    " Trabajo en el laboratorio de robotica, \\pau=500\\ con mi amigo Bender y mi equipo Uchile Jom Breiquers",
+    " Bienvenido al Festival de Ingenieria y Ciencias",
+    " Soy Maqui, un robot Pepper",
     " Soy un robot de servicio, disegnado para acompagnar y ayudar a los humanos",
-    "^start(animations/Stand/Emotions/Positive/Laugh_3) \\pau=1000\\ "
-    ]
+    " En estos momentos trabajo en el laboratorio de robotica, \\pau=500\\ con mi amigo Bender y mi equipo Uchile Jom Breiquers",
+    " Con mi equipo participamos todos los agnos en la competencia robocup!  \\pau=500\\  Este agno logramos el tercer lugar!",
+    " Me encanta el festival, hay muchos robots como yo!  \\pau=500\\  a mi lado, esta mi amigo Bender, un robot de servicio igual que yo \\pau=1000\\ Aqui al frente podemos ver a los pequegnos Naos jugando futbol \\pau=500\\ por ultimo no olviden visitar la pequegna ciudad  de patitos Duckietown",
+    " Festival ",
+    " Cual es el estilo de musica favorito de los robots? \\pau=2500\\ Heavy Metal ^start(animations/Stand/Emotions/Positive/Laugh_3) \\pau=1000\\ "]
 
 b_animation: 'RB'
 

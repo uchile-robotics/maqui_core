@@ -7,23 +7,28 @@ import rospy
 from sensor_msgs.msg import Joy
 from geometry_msgs.msg import Twist
 from maqui_joy import xbox
-
+from maqui_skills import robot_factory
 
 class JoystickBase(object):
 
-    def __init__(self):
+    def __init__(self,robot):
         rospy.loginfo('Joystick base init ...')
 
         self.pub = rospy.Publisher('/cmd_vel', Twist, queue_size=1)
 
         # control
         self.is_paused = False
-
+        self.robot = robot
         # load configuration
         self.b_pause = rospy.get_param('~b_pause', 'START')
         a_linear_x = rospy.get_param('~a_linear_x', 'LS_VERT')
         a_linear_y = rospy.get_param('~a_linear_y', 'LS_HORZ')
         a_angular = rospy.get_param('~a_angular', 'RS_HORZ')
+
+        b_say_move = rospy.get_param('~b_say_move', 'X')
+        b_say_move2 = rospy.get_param('~b_say_move2', 'Y')
+        b_say_move3 = rospy.get_param('~b_say_move3', 'B')
+
         self.max_linear_vel = rospy.get_param('~max_linear_vel', 0.5)
         self.max_angular_vel = rospy.get_param('~max_angular_vel', 0.5)
 
@@ -32,6 +37,10 @@ class JoystickBase(object):
         self.a_idx_linear_x = key_mapper.get_axis_id(a_linear_x)
         self.a_idx_linear_y = key_mapper.get_axis_id(a_linear_y)
         self.a_idx_angular = key_mapper.get_axis_id(a_angular)
+
+        self.b_idx_say1 = key_mapper.get_button_id(b_say_move)
+        self.b_idx_say2 = key_mapper.get_button_id(b_say_move2)
+        self.b_idx_say3 = key_mapper.get_button_id(b_say_move3)
 
         # check
         self.assert_params()
@@ -76,9 +85,21 @@ class JoystickBase(object):
             cmd.angular.z = self.max_angular_vel * msg.axes[self.a_idx_angular]
             cmd.linear.x = self.max_linear_vel * msg.axes[self.a_idx_linear_x]
             cmd.linear.y = self.max_linear_vel * msg.axes[self.a_idx_linear_y]
+
+            if msg.buttons[self.b_idx_say1]:
+                self.robot.say(" Hacedme espacio para avanzar, porfavor")
+                rospy.sleep(1)
+            elif msg.buttons[self.b_idx_say2]:
+                self.robot.say(" Permiso, porfavor")
+                rospy.sleep(1)
+            elif msg.buttons[self.b_idx_say3]:
+                self.robot.say(" Cuidado! robot pasando")
+                rospy.sleep(1)
+
             self.pub.publish(cmd)
 
 if __name__ == '__main__':
     rospy.init_node('joy_base')
-    JoystickBase()
+    robot = robot_factory.build(['tts'])
+    JoystickBase(robot)
     rospy.spin()
