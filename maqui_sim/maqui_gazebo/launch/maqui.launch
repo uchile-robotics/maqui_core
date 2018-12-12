@@ -1,34 +1,27 @@
 <?xml version="1.0"?>
 <launch>
   <arg name="launch_control_trajectory_all" default="true"/>
-  
-  <arg name="rqt_gui"    default="false" doc="Launch rqt with control interface." />
-  <arg name="rviz"       default="false" doc="Launch RViz visualizarion with interface."/>
-  <arg name="world_name" default="empty" doc="Use custom world file (view worlds forlder)."/>
-
+  <arg name="world_name" default="amtc"/>
   <!-- Load the URDF Model -->
   <include file="$(find pepper_description)/launch/pepper_upload.launch" />  
-  <!-- Launch gazebo with custom world file -->
+  <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="world_name" value="$(find maqui_gazebo)/worlds/$(arg world_name).world"/>
-    <arg name="paused" value="false"/>
+    <arg name="paused" value="true"/>
   </include>
 
   <!-- Call Pepper Robot Trajectory Controller -->
-<!--   <include file="$(find pepper_control)/launch/pepper_control_trajectory.launch" unless="$(arg launch_control_trajectory_all)"/> -->
+
+  <include file="$(find pepper_control)/launch/pepper_control_trajectory.launch" unless="$(arg launch_control_trajectory_all)"/>
   <include file="$(find pepper_control)/launch/pepper_control_trajectory_all.launch" if="$(arg launch_control_trajectory_all)"/>
-
-  <!-- Spawn a robot into Gazebo, z init position is important -->
+<!--
+  <include file="$(find pepper_control)/launch/pepper_control_position.launch"/>
+-->
+  <!-- Spawn a robot into Gazebo -->
   <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model"
-    args="-param robot_description -urdf -x -0.0 -y 0.0 -z 0.825 -model maqui" />
-
-  <!-- RQT Control perspective -->
-  <node if="$(arg rqt_gui)" name="rqt_command" pkg="rqt_gui" type="rqt_gui" args="--perspective-file $(find maqui_gazebo)/config/maqui_gazebo_dashboard.perspective"/>
-
-  <!-- RViz -->
-  <node if="$(arg rviz)" name="rviz" pkg="rviz" type="rviz" respawn="false" output="screen" args="-d $(find maqui_gazebo)/config/maqui_gazebo.rviz"/>
-
-  <!-- TF -->
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" ns="pepper_dcm" />
+    args="-param robot_description -urdf -x 0 -y 0 -z 0.82 -model pepper_MP" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" ns="/maqui/">
+    <param name="publish_frequency" value="40" />
+  </node>
 
 </launch>
