@@ -4,8 +4,8 @@
 import rospy
 
 #Robot building
-from maqui_skills.tts import TTSSkill
-from maqui_skills.audition import AuditionSkill
+from tts import TTSSkill
+from audition import AuditionSkill
 
 
 

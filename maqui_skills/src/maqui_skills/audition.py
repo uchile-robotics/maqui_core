@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import rospy
-
+import tts
 from std_srvs.srv import Empty, EmptyResponse
 from naoqi_bridge_msgs.msg import WordRecognized
 
@@ -134,4 +134,4 @@ if __name__ == "__main__":
     rospy.init_node("test_tts")
     tts = AuditionSkill()
     tts.setup()
-    print tts.recognize_with_grammar()
+    print(tts.recognize_with_grammar())
