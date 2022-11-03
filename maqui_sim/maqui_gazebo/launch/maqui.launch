@@ -8,7 +8,7 @@
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <!--<arg name="world_name" value="$(find maqui_gazebo)/worlds/$(arg world_name).world"/>-->
     <arg name="world_name" value="$(find maqui_gazebo)/worlds/amtc.world"/>
-    <arg name="paused" value="true"/>
+    <arg name="paused" value="false"/>
   </include>
 
   <!-- Call Pepper Robot Trajectory Controller -->
