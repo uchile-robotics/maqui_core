@@ -1,7 +1,7 @@
 obstacle_range: 3.0
 raytrace_range: 3.5
 
-footprint: [[-0.17,-0.17],[-0.17,0.17],[0.047,0.17],[0.047,-0.17]]
+footprint: [[-0.35,-0.35],[-0.35,0.35],[0.35,0.35],[0.35,-0.35]]
 #robot_radius: 0.105
 
 inflation_radius: 0.2  # chantar 04
