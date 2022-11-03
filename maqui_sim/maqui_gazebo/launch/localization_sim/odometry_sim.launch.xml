@@ -1,0 +1,22 @@
+<launch>  
+
+    <arg name="map_name"  default="map"/>
+
+    <!-- static map server -->
+    <include file="$(find uchile_maps)/launch/map_server.launch">
+        <arg name="map_name" value="$(arg map_name)"/>
+    </include>
+
+    <!-- Map analyzer -->
+    <include file="$(find uchile_maps)/launch/map_analyzer.launch"/>
+
+    <!-- fake localization -->
+    <node pkg="fake_localization" type="fake_localization" name="fake_localization" ns="/maqui/nav/">
+        <remap from="base_pose_ground_truth" to="/maqui/odom"/>
+        <remap from="initialpose"            to="/maqui/nav/initialpose"/>
+        <remap from="amcl_pose"              to="/maqui/nav/amcl_pose"/>
+        <remap from="particlecloud"          to="/maqui/nav/particlecloud"/>
+        <rosparam file="$(find maqui_gazebo)/params/localization_sim/fake_sim.yaml" command="load"/> 
+    </node>
+
+</launch>

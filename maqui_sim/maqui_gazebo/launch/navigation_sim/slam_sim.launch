@@ -1,0 +1,7 @@
+<launch>
+
+	<include file="$(find maqui_gazebo)/launch/navigation_sim/navigation_sim.launch">
+		<arg name="slam" value="false"/>
+	</include>
+
+</launch>
